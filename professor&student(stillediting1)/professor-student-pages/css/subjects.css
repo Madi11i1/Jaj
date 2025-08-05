@@ -1,0 +1,207 @@
+
+/* Card Styles */
+.card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.card-header h3 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.card-body {
+    padding: 0;
+    overflow-x: auto;
+}
+
+/* Table Styles */
+.subjects-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+    table-layout: auto;
+}
+
+.subjects-table th {
+    background-color: #f8f9fa;/* #3498db;*/
+    color: rgb(0, 0, 0);
+    padding: 15px 20px;
+    text-align: left;
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+}
+
+.subjects-table td {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: top;
+}
+
+.subjects-table tr:last-child td {
+    border-bottom: none;
+}
+
+.subjects-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Column Specific Styles */
+.subjects-table td:first-child { /* ID Column */
+    width: 100px;
+    color:black;
+    /*font-family: monospace;*/
+   /* font-weight: bold;*/
+}
+
+.subjects-table td:nth-child(2) { /* Subject Name */
+    font-weight: 500;
+    color: #2c3e50;
+    min-width: 150px;
+}
+
+.subjects-table td:nth-child(3) { /* Description */
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 400px;
+}
+
+ Action Buttons 
+.actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+    min-width: 150px;
+} 
+
+.btn {
+   /* padding: 6px 12px;*/
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+    border: none;
+    white-space: nowrap;
+     padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn-edit {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 7px 10px;
+    border-radius: 4px;
+    
+}
+
+.btn-edit:hover {
+    background-color:#3498db;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 7px 6px;
+     border-radius: 4px;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 16px;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: static;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    overflow-y: auto;
+   
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+    animation: modalopen 0.4s;
+ 
+}
+
+@keyframes modalopen {
+    from {opacity: 0; transform: translateY(-50px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-control {
+    padding: 12px 15px;
+    font-size: 1.05rem;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .subjects-table {
+        font-size: 14px;
+    }
+    
+    .subjects-table td, .subjects-table th {
+        padding: 8px 12px;
+    }
+    
+    .actions {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

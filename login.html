@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Jahizyah</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #1a73e8;
+            --secondary: #fbbc04;
+            --accent: #34a853;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --light-gray: #dadce0;
+            --error: #d32f2f;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            line-height: 1.6;
+            background-color: var(--background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+       
+        /* Navigation Bar */
+         /* Navigation bar */
+ nav {
+    background-color: #1a73e8;
+    padding: 10px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+ .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2px;
+        }
+
+  .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+.logo-icon {
+            margin-right: 10px;
+        }
+        
+        .logo-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+
+ .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .nav-links .active {
+            color: #ffffff;
+        }
+        /* Login Form */
+        .login-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+        
+        .login-form {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .login-form h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .form-group input, .form-group select { 
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            background-color: white; 
+            cursor: pointer;
+        }
+        
+        .form-group input:focus, .form-group select:focus { 
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .forgot-password {
+            display: block;
+            text-align: right;
+            margin-top: 5px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .submit-btn:hover {
+            background: #0d5bba;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(26, 115, 232, 0.4);
+        }
+        
+        .signup-link {
+            margin-top: 25px;
+            color: var(--text-secondary);
+        }
+        
+        .signup-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .error {
+            color: var(--error);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            text-align: left;
+            display: none;
+        }
+        .password-container {
+            position: relative;
+        }
+        
+        .password-container input {
+            padding-right: 40px; 
+        }
+        
+        .togglePassword {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .login-form {
+                padding: 30px 20px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container nav-container">
+            <div class="logo">
+                <div class="logo-icon" >
+                    <img src="images/Jahizyah.png" alt="Jahizyah Logo" class="logo-image">
+                </div>
+                <span>Jahizyah</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html"><i class="fas fa-home"></i> Home </a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                  
+            </ul>
+        </div>
+    </nav>
+
+    <div class="login-container">
+        <div class="container">
+            <div class="login-form">
+                <h2>Sign In to your account</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="you@example.com" autocomplete="off">
+                        <div class="error" id="emailError">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <select id="role" required>
+                            <option value="" disabled selected>Select your role</option>
+                            <option value="student">Student</option>
+                            <option value="doctor">Doctor</option>
+                        </select>
+                        <div class="error" id="roleError">Please select your role</div>
+                    </div>
+                    
+                     <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-container">
+                        <i class="far fa-eye togglePassword" id="togglePassword"></i>
+
+                            <input type="password" id="password" required autocomplete="new-password">
+                            <i  id="togglePassword"></i>
+                        </div>
+                        <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
+                        <div class="error" id="passwordError">Please enter your password</div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Sign In</button>
+                    <div class="signup-link">
+                        Don't have an account? <a href="signup.html">Sign Up Now</a>
+                    </div>
+                </form>
+
+                <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+                <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+                <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+                <script>
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyAI30r2_rI6vsuoaZIvzZQkauZ0d7KlhwI",
+                        authDomain: "infohive-fda92.firebaseapp.com",
+                        projectId: "infohive-fda92",
+                        storageBucket: "infohive-fda92.appspot.com",
+                        messagingSenderId: "938794496627",
+                        appId: "1:938794496627:web:467f85ce9e035a2136b006",
+                        measurementId: "G-TE8QT8BVD5"
+                    };
+
+                    firebase.initializeApp(firebaseConfig);
+                    const auth = firebase.auth();
+                    const db = firebase.firestore();
+                    const loginForm = document.getElementById('loginForm');
+                    const emailInput = document.getElementById('email');
+                    const roleSelect = document.getElementById('role');
+                    const passwordInput = document.getElementById('password');
+                    const togglePassword = document.getElementById('togglePassword');
+
+                    roleSelect.addEventListener('change', function() {
+                        const selectedRole = roleSelect.value;
+                        if (selectedRole === 'student') {
+                            emailInput.placeholder = '123456789@stu.ut.edu.sa';
+                        } else if (selectedRole === 'doctor') {
+                            emailInput.placeholder = 'yourname123@ut.edu.sa';
+                        } else {
+                            emailInput.placeholder = 'you@example.com';
+                        }
+                    });
+                    togglePassword.addEventListener('click', function () {
+                        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                        passwordInput.setAttribute('type', type);
+                        this.classList.toggle('fa-eye');
+                        this.classList.toggle('fa-eye-slash');
+                    });
+                    loginForm.addEventListener('submit', async function (e) {
+                        e.preventDefault();
+
+                        document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
+
+                        let isValid = true;
+                        const email = document.getElementById('email').value.trim();
+                        const password = document.getElementById('password').value.trim();
+                        const selectedRole = document.getElementById('role').value;
+
+                        if (email === '') {
+                            document.getElementById('emailError').textContent = "Please enter your email address.";
+                            document.getElementById('emailError').style.display = 'block';
+                            isValid = false;
+                        } else if (selectedRole === 'student') {
+                            const studentEmailRegex = /^[0-9]{8,9}@stu\.ut\.edu\.sa$/i;
+                            if (!studentEmailRegex.test(email)) {
+                                document.getElementById('emailError').textContent = 'Student email must end with @stu.ut.edu.sa';
+                                document.getElementById('emailError').style.display = 'block';
+                                isValid = false;
+                            }
+                        } else if (selectedRole === 'doctor') {
+                            const doctorEmailRegex = /^[a-zA-Z]+@ut\.edu\.sa$/i;
+                            if (!doctorEmailRegex.test(email)) {
+                                document.getElementById('emailError').textContent ='Doctor email must end with @ut.edu.sa';
+                                document.getElementById('emailError').style.display = 'block';
+                                isValid = false;
+                            }
+                        }
+
+                        if (selectedRole === '') {
+                            document.getElementById('roleError').textContent = 'Please select your role.'; // Added for consistency
+                            document.getElementById('roleError').style.display = 'block';
+                            isValid = false;
+                        }
+
+                        if (password === '') {
+                            document.getElementById('passwordError').textContent = 'Please enter your password.'; // Added for consistency
+                            document.getElementById('passwordError').style.display = 'block';
+                            isValid = false;
+                        }
+
+                        if (!isValid) return;
+
+                        try {
+                            const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                            const user = userCredential.user;
+
+                            if (!user.emailVerified) {
+                                alert("Your email address is not verified. Please check your inbox or spam folder for the verification link.");
+                                auth.signOut();
+                                return;
+                            }
+
+                            const doc = await db.collection('users').doc(user.uid).get();
+                            if (!doc.exists) {
+                                alert("User data not found in the database. Please contact support.");
+                                auth.signOut();
+                                return;
+                            }
+
+                            const roleInDatabase = doc.data().role;
+
+                            if (roleInDatabase !== selectedRole) {
+                                alert("The selected role is incorrect. Your registered role is: " + roleInDatabase);
+                                auth.signOut();
+                                return;
+                            }
+
+                            if (roleInDatabase === "student") {
+                                window.location.href = "professor&student(stillediting1)/professor-student-pages/Main-stu.html";
+                            } else if (roleInDatabase === "doctor") {
+                                window.location.href = "professor&student(stillediting1)/professor-student-pages/dashboard.html"; 
+                            } else if (roleInDatabase === "admin") {
+                                window.location.href = "admin-dashboard.html"; 
+                            } else {
+                                alert("Unknown role. Please contact administration.");
+                                auth.signOut();
+                                return;
+                            }
+
+                        } catch (error) {
+                            console.error("Login Error:", error);
+                            let errorMessage = "An error occurred during login. Please check your credentials."; // رسالة عامة
+
+                            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                                errorMessage = "Incorrect email or password. Please try again.";
+                            } else if (error.code === 'auth/invalid-email') {
+                                errorMessage = "Invalid email format. Please enter a valid email address.";
+                            } else if (error.code === 'auth/user-disabled') {
+                                errorMessage = "Your account has been disabled. Please contact support.";
+                            }
+                            
+                            alert("Login Failed: " + errorMessage);
+                        }
+                    });
+                </script>
+            
+</body>
+</html>

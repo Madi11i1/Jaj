@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Manage Subjects</title>
+    <meta name="description" content="Manage and view all subjects in the system">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2563EB;
+            --primary-light: #3B82F6;
+            --primary-dark: #1D4ED8;
+            --secondary-color: #10B981;
+            --danger-color: #EF4444;
+            --warning-color: #F59E0B;
+            --text-dark: #1E3A8A;
+            --text-light: #FFFFFF;
+            --bg-light: #FFFFFF;
+            --bg-lighter: #F8FAFC;
+            --border-color: rgba(59, 130, 246, 0.3);
+            --card-bg: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-lighter);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-light);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .mobile-menu-toggle span {
+            display: block;
+            height: 2px;
+            width: 100%;
+            background-color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, var(--primary-dark), var(--primary-color));
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .admin-dashboard {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+        
+        .admin-header {
+            background: var(--bg-light);
+            backdrop-filter: blur(20px);
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+        
+        .admin-welcome {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .admin-title h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .admin-title p {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .admin-content {
+            padding: 1rem 0 3rem;
+        }
+        
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .admin-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .admin-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-dark);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(30, 58, 138, 0.1);
+        }
+        
+        .data-table th {
+            color: var(--primary-color);
+            font-weight: 600;
+            background: rgba(59, 130, 246, 0.1);
+        }
+        
+        .data-table td {
+            color: var(--text-dark);
+        }
+        
+        .data-table tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--secondary-color);
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .status-inactive {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+        
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning-color);
+            border: 1px solid var(--warning-color);
+        }
+        
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 0.25rem;
+        }
+        
+        .action-btn.delete {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-filter {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dark);
+            opacity: 0.6;
+        }
+        
+        .filter-dropdown {
+            min-width: 200px;
+        }
+        
+        .filter-dropdown select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-dropdown select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .notification-info {
+            background: var(--primary-color);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .notification-success {
+            background: var(--secondary-color);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .notification-error {
+            background: var(--danger-color);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dark);
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            opacity: 1;
+        }
+        
+        .modal-body {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        @media (max-width: 1024px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: var(--bg-light);
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem 0;
+                transition: left 0.3s ease;
+                gap: 1.5rem;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .admin-welcome {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .admin-title h1 {
+                font-size: 2rem;
+            }
+            
+            .admin-actions {
+                justify-content: center;
+            }
+            
+            .data-table {
+                font-size: 0.9rem;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .search-filter {
+                flex-direction: column;
+            }
+            
+            .search-box,
+            .filter-dropdown {
+                min-width: 100%;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+            }
+            
+            .modal-footer .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="#" class="logo">
+                <img src="images/images/Jahizyah.png" style="width: 100px;" alt="Jahizyah Logo">
+            </a>
+            
+            <ul class="nav-menu">
+                <li><a href="admin-dashboard.html" class="nav-link">Home</a></li>
+                <li><a href="users.html" class="nav-link">Users</a></li>
+                <li><a href="subadmin.html" class="nav-link">Subject</a></li>
+                <li><a href="settings.html" class="nav-link">Setting</a></li>
+                <li><a href="admin-login.html" class="nav-link">Logout</a></li>
+            </ul>
+            
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <div class="admin-dashboard">
+        <section class="admin-header">
+            <div class="container">
+                <div class="admin-welcome">
+                    <div class="admin-title">
+                        <h1>Subjects Management</h1>
+                        <p>View all subjects in the system</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="admin-content">
+            <div class="container">
+                <div class="admin-grid">
+                    <div class="admin-section">
+                        <div class="search-filter">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="searchInput" placeholder="Search subjects...">
+                            </div>
+                            <div class="filter-dropdown">
+                                <select id="statusFilter">
+                                    <option value="">Filter by Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject Name</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subjectsTableBody">
+                                <!-- هنا يحمل الموضوع-->
+                            </tbody>
+                        </table>
+                        
+                        <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div id="paginationInfo">Loading subjects...</div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-secondary" id="prevPageBtn" disabled>Previous</button>
+                                <button class="btn btn-primary" id="nextPageBtn" disabled>Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "infohive-fda92.firebaseapp.com",
+            projectId: "infohive-fda92",
+            storageBucket: "infohive-fda92.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        
+        const subjectsTableBody = document.getElementById('subjectsTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const statusFilter = document.getElementById('statusFilter');
+        const prevPageBtn = document.getElementById('prevPageBtn');
+        const nextPageBtn = document.getElementById('nextPageBtn');
+        const paginationInfo = document.getElementById('paginationInfo');
+
+        
+        let subjects = [];
+        let lastVisibleDoc = null;
+        let firstVisibleDoc = null;
+        const pageSize = 10; // Number of subjects per page
+
+       
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSubjects();
+            setupEventListeners();
+            
+            
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            mobileMenuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        });
+
+        
+        function setupEventListeners() {
+            
+            searchInput.addEventListener('input', debounce(loadSubjects, 300));
+            statusFilter.addEventListener('change', loadSubjects);
+            
+            
+            prevPageBtn.addEventListener('click', loadPreviousPage);
+            nextPageBtn.addEventListener('click', loadNextPage);
+        }
+
+        
+        async function loadSubjects(direction = 'first') {
+            try {
+                showLoading(true);
+                
+                let query = db.collection('subjects')
+                    .orderBy('name') // Order by subject name
+                    .limit(pageSize);
+                
+                
+                if (direction === 'next' && lastVisibleDoc) {
+                    query = query.startAfter(lastVisibleDoc);
+                } else if (direction === 'prev' && firstVisibleDoc) {
+                    query = query.endBefore(firstVisibleDoc).limitToLast(pageSize);
+                }
+                
+                
+                const status = statusFilter.value;
+                if (status) {
+                    query = query.where('status', '==', status);
+                }
+                
+                const snapshot = await query.get();
+                
+                
+                if (snapshot.docs.length > 0) {
+                    firstVisibleDoc = snapshot.docs[0];
+                    lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
+                }
+                
+                subjects = [];
+                snapshot.forEach(doc => {
+                    const subject = doc.data();
+                    subject.id = doc.id;
+                    subjects.push(subject);
+                });
+                
+                
+                const searchText = searchInput.value.toLowerCase();
+                if (searchText) {
+                    subjects = subjects.filter(subject => 
+                        subject.name.toLowerCase().includes(searchText) || 
+                        (subject.description && subject.description.toLowerCase().includes(searchText))
+                    );
+                }
+                
+                renderSubjects();
+                updatePaginationControls();
+                showLoading(false);
+            } catch (error) {
+                console.error("Error loading subjects: ", error);
+                showNotification('Error loading subjects', 'error');
+                showLoading(false);
+            }
+        }
+
+        
+        function loadNextPage() {
+            loadSubjects('next');
+        }
+
+        function loadPreviousPage() {
+            loadSubjects('prev');
+        }
+
+        
+        function updatePaginationControls() {
+            prevPageBtn.disabled = !firstVisibleDoc;
+            nextPageBtn.disabled = subjects.length < pageSize;
+            
+            if (subjects.length === 0) {
+                paginationInfo.textContent = 'No subjects found';
+            } else {
+                paginationInfo.textContent = `Showing ${subjects.length} subject(s)`;
+            }
+        }
+
+        
+        function renderSubjects() {
+            subjectsTableBody.innerHTML = '';
+            
+            if (subjects.length === 0) {
+                subjectsTableBody.innerHTML = '<tr><td colspan="3" style="text-align: center;">No subjects found</td></tr>';
+                return;
+            }
+            
+            subjects.forEach(subject => {
+                const tr = document.createElement('tr');
+                
+                tr.innerHTML = `
+                    <td>${subject.name || 'Unnamed Subject'}</td>
+                    <td>${subject.description || 'No description'}</td>
+                    <td>
+                        <span class="status-badge ${getStatusClass(subject.status)}">
+                            ${capitalizeFirstLetter(subject.status || 'active')}
+                        </span>
+                    </td>
+                `;
+                
+                subjectsTableBody.appendChild(tr);
+            });
+        }
+
+        
+        function getStatusClass(status) {
+            switch (status) {
+                case 'active': return 'status-active';
+                case 'inactive': return 'status-inactive';
+                default: return 'status-pending';
+            }
+        }
+
+        
+        function showLoading(show) {
+            
+            prevPageBtn.disabled = show;
+            nextPageBtn.disabled = show;
+        }
+
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                const context = this, args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    func.apply(context, args);
+                }, wait);
+            };
+        }
+    </script>
+</body>
+</html>

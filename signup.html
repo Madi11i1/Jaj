@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Jahizyah</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1a73e8;
+            --secondary: #fbbc04;
+            --accent: #34a853;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --light-gray: #dadce0;
+            --error: #d32f2f;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        } nav {
+            background-color: #1a73e8;
+            padding: 10px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+ .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2px;
+        }
+
+  .logo {
+            display:flex;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            font-size: 25px;
+       
+        }
+
+.logo-icon {
+            margin-right: 10px;
+        }
+        
+        .logo-image {
+            width: 40px;
+            height: 40px;
+           
+            object-fit: cover;
+        }
+      
+
+ .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .nav-links .active {
+            color: #ffffff;
+        }
+        .signup-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+        .signup-form {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        .signup-form h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            text-align: center;
+font-size: 1.8rem;        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: block;
+            color: var(--text-primary);
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+      .submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .submit-btn:hover {
+            background: #0d5bba;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(26, 115, 232, 0.4);
+        }
+        
+        .signup-link {
+            margin-top: 25px;
+            color: var(--text-secondary);
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-secondary);
+        }
+        .login-link a {
+            color: var(--primary);
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .error {
+            color: var(--error);
+            font-size: 0.9rem;
+            display: none;
+            margin-top: 5px;
+        }
+         .password-container {
+            position: relative;
+        }
+        
+        .password-container input {
+            padding-right: 40px; 
+        }
+        
+        .togglePassword {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-secondary);
+        }   
+        @media (max-width: 768px) {
+                .signup-form {
+                    padding: 30px 20px;
+                }
+                
+                .nav-container {
+                    flex-direction: column;
+                    gap: 15px;
+                }
+                
+                .nav-links {
+                    gap: 15px;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                }
+        }
+    </style>
+</head>
+<body>
+
+  <nav>
+        <div class="container nav-container">
+            <div class="logo">
+                <div class="logo-icon" >
+                    <img src="images/Jahizyah.png" alt="Jahizyah Logo" class="logo-image">
+                </div>
+                <span>Jahizyah</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html"><i class="fas fa-home"></i> Home </a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                  
+            </ul>
+        </div>
+    </nav>
+
+<div class="signup-container">
+    <div class="container">
+        <div class="signup-form">
+            <h2>Create Your Account</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" required autocomplete="off">
+                    <div class="error" id="nameError">Please enter your full name</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="you@example.com" required autocomplete="off">
+                    <div class="error" id="emailError">Invalid email format</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" required>
+                        <option value="" disabled selected>Select your role</option>
+                        <option value="student">Student</option>
+                        <option value="doctor">Doctor</option>
+                    </select>
+                    <div class="error" id="roleError">Please select your role</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-container">
+                        <input type="password" id="password" required>
+                        <i class="far fa-eye togglePassword" id="togglePassword"></i>
+                    </div>
+                    <div class="error" id="passwordError">Password must be at least 8 characters</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <div class="password-container">
+                        <input type="password" id="confirm-password" required>
+                        <i class="far fa-eye togglePassword" id="toggleConfirmPassword"></i>
+                    </div>
+                    <div class="error" id="confirmError">Passwords do not match</div>
+                </div>
+
+                <button type="submit" class="submit-btn">Sign Up</button>
+                <div class="login-link">
+                    Already have an account? <a href="login.html">Log In</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAI30r2_rI6vsuoaZIvzZQkauZ0d7KlhwI",
+            authDomain: "infohive-fda92.firebaseapp.com",
+            projectId: "infohive-fda92",
+            storageBucket: "infohive-fda92.appspot.com",
+            messagingSenderId: "938794496627",
+            appId: "1:938794496627:web:467f85ce9e035a2136b006"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const roleSelect = document.getElementById('role');
+            const emailInput = document.getElementById('email');
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+            const confirmPasswordInput = document.getElementById('confirm-password');
+
+            const updateEmailPlaceholder = () => {
+                const role = roleSelect.value;
+                if (role === 'student') {
+                    emailInput.placeholder = 'Example: 123456789@stu.ut.edu.sa';
+                } else if (role === 'doctor') {
+                    emailInput.placeholder = 'Example: name@ut.edu.sa';
+                } else {
+                    emailInput.placeholder = 'you@example.com';
+                }
+            };
+            updateEmailPlaceholder();
+            roleSelect.addEventListener('change', updateEmailPlaceholder);
+            togglePassword.addEventListener('click', function () {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+            toggleConfirmPassword.addEventListener('click', function () {
+                const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPasswordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        }); 
+
+        const signupForm = document.getElementById('signupForm');
+        signupForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
+
+            const fullName = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const role = document.getElementById('role').value;
+            let isValid = true;
+
+            const passwordPattern = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]+$/;
+
+            if (!fullName) {
+                document.getElementById('nameError').textContent = 'Please enter your full name';
+                document.getElementById('nameError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (role === '') {
+                document.getElementById('roleError').textContent = 'Please select your role';
+                document.getElementById('roleError').style.display = 'block';
+                isValid = false;
+            }
+
+            const emailErrorEl = document.getElementById('emailError');
+            emailErrorEl.textContent = 'Invalid email format';
+            
+            if (email === '') {
+                emailErrorEl.textContent = 'Please enter your email address';
+                emailErrorEl.style.display = 'block';
+                isValid = false;
+            } else {
+                if (role === 'student') {
+                    const studentEmailRegex = /^[0-9]{9}@stu\.ut\.edu\.sa$/i;
+                    if (!studentEmailRegex.test(email)) {
+                        emailErrorEl.textContent = 'Student email must be 9 digits followed by @stu.ut.edu.sa';
+                        emailErrorEl.style.display = 'block';
+                        isValid = false;
+                    }
+                } else if (role === 'doctor') {
+                    const doctorEmailRegex = /^[a-zA-Z]+@ut\.edu\.sa$/i;
+                    if (!doctorEmailRegex.test(email)) {
+                        emailErrorEl.textContent = 'Doctor email must contain English letters followed by @ut.edu.sa';
+                        emailErrorEl.style.display = 'block';
+                        isValid = false;
+                    }
+                } else {
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                        emailErrorEl.textContent = 'Invalid email format';
+                        emailErrorEl.style.display = 'block';
+                        isValid = false;
+                    }
+                }
+            }
+
+            const passwordErrorEl = document.getElementById('passwordError');
+            if (password.length < 8) {
+                passwordErrorEl.textContent = 'Password must be at least 8 characters.';
+                passwordErrorEl.style.display = 'block';
+                isValid = false;
+            } else if (!passwordPattern.test(password)) {
+                passwordErrorEl.textContent = 'Password can only contain English letters, numbers, and symbols.';
+                passwordErrorEl.style.display = 'block';
+                isValid = false;
+            }
+
+            if (password !== confirmPassword) {
+                document.getElementById('confirmError').textContent = 'Passwords do not match.';
+                document.getElementById('confirmError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                await user.sendEmailVerification({
+                    url: 'https://infohive-fda92.firebaseapp.com/email-verified.html'
+                });
+                
+                await db.collection('users').doc(user.uid).set({
+                    name: fullName,
+                    email: email,
+                    role: role,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                signupForm.reset();
+                alert('A verification email has been sent. Please check your inbox or spam folder.');
+                window.location.href = "login.html?message=verifyEmail";
+
+            } catch (error) {
+                let errorMessage = 'Registration Error: ';
+                
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'This email is already in use. Please log in or use a different email.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email format.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'The password is too weak. Please choose a stronger password.';
+                } else {
+                    errorMessage += error.message;
+                }
+                
+                alert(errorMessage);
+            }
+        });
+        </script>
+</body>
+</html>

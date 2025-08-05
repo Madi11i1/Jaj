@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Dashboard | Jahizyah</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .card {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            background: white;
+        }
+        
+        #gradesChart {
+            max-height: 300px;
+            width: 100% !important;
+        }
+        
+        .stats-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .subject-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+        
+        .subject-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .subject-icon {
+            font-size: 24px;
+            color: #3498db;
+        }
+        
+        .chart-card {
+            height: 400px;
+        }
+
+        
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 70px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    padding: 30px 20px 20px;
+}
+
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 0;
+    border-top: 1px solid var(--light-gray);
+}
+
+.footer-logo {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h2>Professor Portal</h2>
+        </div>
+        <div class="menu">
+            <a href="dashboard.html" class="menu-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="subjectmang.html" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Subject Management</span>
+            </a>
+            <a href="MCQ-Mang.html" class="menu-item">
+                <i class="fas fa-question-circle"></i>
+                <span>MCQ Management</span>
+            </a>
+            <a href="recommendation.html" class="menu-item">
+                <i class="fas fa-lightbulb"></i>
+                <span>Recommendation Management</span>
+            </a>
+            <a href="setting.html" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+        <div class="logout-container">
+        <button id="logoutBtn" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Log Out</span>
+        </button>
+    </div>
+   </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h2>Professor Dashboard</h2>
+            <div class="user-info">
+                <span id="headerUsername">Dr. Professor</span>
+                <img id="headerProfileImage" src="images/default_avatar.png" alt="Profile" style="width: 40px; height: 40px; border-radius: 50%;">
+            </div>
+        </div>
+        
+        <div class="stats-container">
+            <!-- بطاقة المواد في الأعلى -->
+            <div class="card subject-card">
+                <div class="subject-info">
+                    <i class="fas fa-book subject-icon"></i>
+                    <div>
+                        <h3 id="totalSubjects">0</h3>
+                        <p>Total Subjects</p>
+                    </div>
+                </div>
+                <a href="subjectmang.html" class="btn-view">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- الرسم البياني في الأسفل -->
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h3>Average Student Grades</h3>
+                </div>
+                <canvas id="gradesChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+<footer>
+        <div class="footer-content">
+                </div>
+                <span>Jahizyah</span>
+            <p class="copyright">© 2025 Jahizyah Educational Platform. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+    // تهيئة Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyAI30r2_rI6vsuoaZIvzZQkauZ0d7KlhwI",
+        authDomain: "infohive-fda92.firebaseapp.com",
+        projectId: "infohive-fda92",
+        storageBucket: "infohive-fda92.appspot.com",
+        messagingSenderId: "938794496627",
+        appId: "1:938794496627:web:467f85ce9e035a2136b006"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    let gradesChart = null;
+
+    // عند تسجيل الدخول
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            loadUserData(user.uid);
+            loadSubjects();
+            loadExamResults();
+        } else {
+            window.location.href = "login.html";
+        }
+    });
+
+    async function loadUserData(uid) {
+        try {
+            const doc = await db.collection('users').doc(uid).get();
+            if (doc.exists) {
+                const data = doc.data();
+                document.getElementById('headerUsername').textContent = data.fullName || 'Dr. Professor';
+                if (data.profileImageURL) {
+                    document.getElementById('headerProfileImage').src = data.profileImageURL;
+                }
+            }
+        } catch (error) {
+            console.error("Error loading user data:", error);
+        }
+    }
+
+    async function loadSubjects() {
+        try {
+            const snapshot = await db.collection('subjects').get();
+            document.getElementById('totalSubjects').textContent = snapshot.size;
+        } catch (error) {
+            console.error("Error loading subjects:", error);
+        }
+    }
+
+    async function loadExamResults() {
+        try {
+            const snapshot = await db.collection('examResults').get();
+            if (snapshot.empty) {
+                console.log("No exam results found");
+                return;
+            }
+
+            const subjects = {};
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                if (!data.subject || data.score === undefined) return;
+                
+                const subjectName = data.subject;
+                const score = parseFloat(data.score) || 0;
+                const total = parseFloat(data.totalQuestions) || 1;
+                const percent = Math.min(100, Math.round((score / total) * 100));
+                
+                if (!subjects[subjectName]) {
+                    subjects[subjectName] = { total: 0, count: 0 };
+                }
+                subjects[subjectName].total += percent;
+                subjects[subjectName].count++;
+            });
+
+            const labels = [];
+            const averages = [];
+            
+            for (const subject in subjects) {
+                if (subjects[subject].count > 0) {
+                    labels.push(subject);
+                    averages.push(Math.round(subjects[subject].total / subjects[subject].count));
+                }
+            }
+
+            if (labels.length > 0) {
+                createChart(labels, averages);
+            } else {
+                console.log("No valid exam results data");
+            }
+        } catch (error) {
+            console.error("Error loading exam results:", error);
+        }
+    }
+
+    function createChart(labels, data) {
+        const ctx = document.getElementById('gradesChart').getContext('2d');
+        
+        if (gradesChart) {
+            gradesChart.destroy();
+        }
+        
+        gradesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Average Score %',
+                    data: data,
+                    backgroundColor: '#3498db',
+                    borderColor: '#2980b9',
+                    borderWidth: 1,
+                    barPercentage: 0.3,
+                    categoryPercentage: 0.8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Average Score (%)'
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            maxRotation: 0,
+                            minRotation: 0
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw}%`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+    // تأثير التحميل بالعربية
+    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الخروج...';
+    this.disabled = true;
+    
+    firebase.auth().signOut()
+       .then(() => {
+            window.location.href = "../../home.html";// تم التغيير هنا
+        })
+    
+        .catch(error => {
+            this.innerHTML = '<i class="fas fa-sign-out-alt"></i> تسجيل الخروج';
+            this.disabled = false;
+            alert("خطأ في الخروج: " + error.message);
+        });
+});
+    </script>
+</body>
+</html>

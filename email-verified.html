@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification - Jahizyah</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #1a73e8;
+            --secondary: #fbbc04;
+            --accent: #34a853;
+            --background: #f8f9fa; /* Light background */
+            --card-bg: #ffffff;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --light-gray: #dadce0;
+            --error: #d32f2f;
+            --success-light-bg: rgba(52, 168, 83, 0.1);
+            --error-light-bg: rgba(211, 47, 47, 0.1);
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            line-height: 1.6;
+            background-color: var(--background); /* Simple background color */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            display: flex; /* Use flexbox for centering */
+            align-items: center; /* Center content vertically */
+            justify-content: center; /* Center content horizontally */
+            margin: 0; /* Reset margin */
+            padding: 0; /* Reset padding */
+        }
+        
+        /* Verification Card (similar to login/reset forms) */
+        .verification-card {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            width: 90%; /* Responsive width */
+            max-width: 450px; /* Max width for the card */
+            text-align: center;
+        }
+        
+        .verification-card h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .verification-card p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .loader {
+            border: 4px solid var(--light-gray);
+            border-top: 4px solid var(--primary); /* Using primary color */
+            border-radius: 50%;
+            width: 50px; /* Slightly larger size */
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 30px auto; /* Added margin for spacing */
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Combined error/success message styles */
+        .message-box {
+            font-weight: 600;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: block;
+        }
+
+        .message-box.error {
+            color: var(--error);
+            background-color: var(--error-light-bg);
+        }
+
+        .message-box.success {
+            color: var(--accent);
+            background-color: var(--success-light-bg);
+        }
+        
+        @media (max-width: 768px) {
+            .verification-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-card">
+        <h2 id="statusTitle">Verifying...</h2> 
+        <div class="loader"></div>
+        <p id="message">Please wait a moment...</p>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAI30r2_rI6vsuoaZIvzZQkauZ0d7KlhwI",
+            authDomain: "infohive-fda92.firebaseapp.com",
+            projectId: "infohive-fda92",
+            storageBucket: "infohive-fda92.appspot.com",
+            messagingSenderId: "938794496627",
+            appId: "1:938794496627:web:467f85ce9e035a2136b006",
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const messageElement = document.getElementById('message');
+        const loaderElement = document.querySelector('.loader');
+        const statusTitleElement = document.getElementById('statusTitle');
+
+        function redirectToDashboard(role) {
+            if (role === "student") {
+                window.location.href = "professor&student(stillediting1)/professor-student-pages/Main-stu.html";
+            } else if (role === "doctor") {
+                window.location.href = "professor&student(stillediting1)/professor-student-pages/dashboard.html";
+            } else if (role === "admin") {
+                window.location.href = "admin-dashboard.html";
+            } else {
+                statusTitleElement.innerHTML = "Error!";
+                messageElement.classList.add('error', 'message-box');
+                messageElement.innerHTML = "Verification complete, but user role not defined.<br><a href='login.html'>Back to Login Page</a>";
+                loaderElement.style.display = 'none';
+            }
+        }
+
+        async function fetchUserRoleAndRedirect(user) {
+            try {
+                const doc = await db.collection("users").doc(user.uid).get();
+                if (doc.exists) {
+                    const role = doc.data().role;
+                    statusTitleElement.innerHTML = "Verification Successful!";
+                    messageElement.classList.add('success', 'message-box');
+                    messageElement.innerHTML = "Email verified! Redirecting...";
+                    setTimeout(() => redirectToDashboard(role), 2000);
+                } else {
+                    statusTitleElement.innerHTML = "Error!";
+                    messageElement.classList.add('error', 'message-box');
+                    messageElement.innerHTML = "Verification complete, but user data not found.<br><a href='login.html'>Back to Login Page</a>";
+                    loaderElement.style.display = 'none';
+                }
+            } catch (error) {
+                statusTitleElement.innerHTML = "Error!";
+                messageElement.classList.add('error', 'message-box');
+                messageElement.innerHTML = `An error occurred while fetching data: ${error.message}<br><a href='login.html'>Back to Login Page</a>`;
+                loaderElement.style.display = 'none';
+            }
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const actionCode = urlParams.get('oobCode');
+        const mode = urlParams.get('mode');
+
+        if (!actionCode || !mode) {
+            statusTitleElement.innerHTML = "Error!";
+            messageElement.classList.add('error', 'message-box');
+            messageElement.innerHTML = "Invalid link.<br><a href='login.html'>Back to Login</a>";
+            loaderElement.style.display = 'none';
+        } else if (mode === "verifyEmail") {
+            statusTitleElement.innerHTML = "Confirming your email...";
+            messageElement.innerHTML = "Please wait a moment..."; // Initial message for verifying state
+
+            auth.applyActionCode(actionCode).then(() => {
+                return auth.currentUser ? auth.currentUser.reload() : Promise.resolve();
+            }).then(() => {
+                if (auth.currentUser && auth.currentUser.emailVerified) {
+                    fetchUserRoleAndRedirect(auth.currentUser);
+                } else {
+                    statusTitleElement.innerHTML = "Verification Complete!";
+                    messageElement.classList.add('success', 'message-box');
+                    messageElement.innerHTML = "Email verification complete. Please <a href='login.html'>log in</a>.";
+                    loaderElement.style.display = 'none';
+                }
+            }).catch(error => {
+                statusTitleElement.innerHTML = "Verification Error!";
+                messageElement.classList.add('error', 'message-box');
+                messageElement.innerHTML = `Error during verification: ${error.message}<br><a href='login.html'>Back to Login</a>`;
+                loaderElement.style.display = 'none';
+            });
+
+        } else if (mode === "resetPassword") {
+            statusTitleElement.innerHTML = "Password Reset";
+            messageElement.innerHTML = "Redirecting to password reset page...";
+            setTimeout(() => {
+                window.location.href = `reset-password.html?oobCode=${actionCode}`;
+            }, 2000);
+        } else {
+            statusTitleElement.innerHTML = "Error!";
+            messageElement.classList.add('error', 'message-box');
+            messageElement.innerHTML = "Link type not supported yet.<br><a href='login.html'>Back to Login</a>";
+            loaderElement.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

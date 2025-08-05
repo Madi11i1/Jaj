@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jahizyah - Contact Us</title>
+   <link rel="stylesheet" href="css/style22.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>    
+   * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    :root {
+      --primary: #1a73e8;
+      --light-gray: #dadce0;
+      --error: #d32f2f;
+    }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1469&q=80')
+                  center/cover
+                  fixed;
+      position: relative;
+      min-height: 100vh;
+    }
+    body::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(248, 249, 250, 0.85);
+      z-index: -1;
+    }        /* Navigation bar */ /* Navigation Bar */
+         /* Navigation bar */
+ nav {
+            background-color: #1a73e8;/* #2c3e50;*/
+            padding: 10px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+ .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2px;
+        }
+
+  .logo {
+            display:flex;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            font-size: 25px;/*1.2rem;*/
+       
+        }
+
+.logo-icon {
+            margin-right: 10px;
+        }
+        
+        .logo-image {
+            width: 40px;
+            height: 40px;
+           
+         /*   border-radius: 50%;*/
+            object-fit: cover;
+        }
+       /*
+.logo:hover .logo-icon {
+    background: rgba(255, 255, 255, 0.25);
+  /*  transform: rotate(15deg);
+}
+*/
+
+ .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .nav-links .active {
+            color: #ffffff;
+        }
+
+    .contact-form {
+      background: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      margin: 50px auto;
+      max-width: 600px;
+    }
+    .contact-form h2 {
+      color: var(--primary);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 25px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid var(--light-gray);
+      border-radius: 6px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+    .form-group textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    .submit-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: block;
+      margin: 0 auto;
+      transition: 0.3s;
+    }
+    .submit-btn:hover {
+      background: #0d5bba;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(26, 115, 232, 0.4);
+    }
+    .error {
+      color: var(--error);
+      font-size: 0.9rem;
+      margin-top: 5px;
+      display: none;
+    }
+    .input-error {
+      border-color: var(--error) !important;
+    }
+    @media (max-width: 768px) {
+            .contact-form {
+                padding: 30px 20px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+    <nav>
+        <div class="container nav-container">
+            <div class="logo">
+                <div class="logo-icon" >
+                    <img src="../../images/Jahizyah.png" alt="Jahizyah Logo" class="logo-image">
+                </div>
+                <span>Jahizyah</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="Main-stu.html"><i class="fas fa-home"></i> Home </a></li>
+                <li><a href="about-s.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="progress.html"><i class="fas fa-chart-line"></i> Progress</a></li>
+                <li><a href="contact-s.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                   <li><a href="setting-stu.html"><i class="fas fa-cog"></i>setting </a></li>
+            </ul>
+        </div>
+    </nav>
+
+  <!-- Contact Form -->
+  <div class="container">
+    <div class="contact-form">
+      <h2>Contact Us</h2>
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" required>
+          <div class="error" id="nameError">Please enter your name</div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+          <div class="error" id="emailError">Please enter a valid email address</div>
+        </div>
+        <div class="form-group">
+          <label for="suggestion">Your Suggestion</label>
+          <textarea id="suggestion" name="suggestion" required></textarea>
+          <div class="error" id="suggestionError">Please enter your suggestion</div>
+        </div>
+        <button type="submit" class="submit-btn">Send Message</button>
+      </form>
+    </div>
+  </div>
+
+      <footer>
+        <div class="footer-content">
+                </div>
+                <span>Jahizyah</span>
+            <div class="footer-links">
+                <a href="Main-stu.html">Home</a>
+                <a href="about-s.html">About Us</a>
+                <a href="contact-s.html">Contact</a>
+            </div>
+            
+            <p class="copyright">© 2025 Jahizyah Educational Platform. All Rights Reserved.<br>
+            Assess Your Level And Get Personalized Recommendations | Choose The Subject You Want To Test Your Knowledge In</p>
+        </div>
+    </footer>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAI30r2_rI6vsuoaZIvzZQkauZ0d7KlhwI",
+      authDomain: "infohive-fda92.firebaseapp.com",
+      projectId: "infohive-fda92"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('input,textarea').forEach(el => el.classList.remove('input-error'));
+
+      let isValid = true;
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const suggestion = document.getElementById('suggestion').value.trim();
+
+      if (!name) { document.getElementById('nameError').style.display = 'block'; document.getElementById('name').classList.add('input-error'); isValid = false; }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) { document.getElementById('emailError').style.display = 'block'; document.getElementById('email').classList.add('input-error'); isValid = false; }
+      if (!suggestion) { document.getElementById('suggestionError').style.display = 'block'; document.getElementById('suggestion').classList.add('input-error'); isValid = false; }
+
+      if (isValid) {
+        db.collection('suggestions').add({
+          name, email, message: suggestion,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(() => {
+          alert('Thank you! Your suggestion has been sent successfully.');
+          document.getElementById('contactForm').reset();
+        })
+        .catch(e => { console.error("Error:", e); alert('An error occurred during submission. Please try again later.'); });
+      }
+    });
+
+    
+  </script>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Settings | Jahizyah Professor Portal</title> <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <style>
+        /* Improved Styles */
+        /* أنماط زر الخروج */
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .form-row label {
+            width: 200px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-row input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-row input:disabled {
+            background-color: #f5f5f5;
+            color: #666;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            text-align: center;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        
+        .modal-content .close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-content .close:hover {
+            color: #333;
+        }
+
+        /* Avatar Selection Styles */
+        .avatar-selection-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .avatar-option {
+            width: 60px; /* حجم الصورة الرمزية المصغرة */
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .avatar-option:hover {
+            border-color: #007bff;
+            transform: scale(1.05);
+        }
+
+        .avatar-option.selected {
+            border-color: #28a745; /* لون الحدود للصورة المختارة */
+            box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
+        }
+
+        .current-profile-picture-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .current-profile-picture-display img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+        }
+              
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 70px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    padding: 30px 20px 20px;
+}
+
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 0;
+    border-top: 1px solid var(--light-gray);
+}
+
+.footer-logo {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo"><h1>Professor Portal</h1></div>
+    <div class="menu">
+        <a href="dashboard.html" class="menu-item"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+        <a href="subjectmang.html" class="menu-item"><i class="fas fa-book"></i> <span>Subject Management</span></a>
+        <a href="MCQ-Mang.html" class="menu-item"><i class="fas fa-question-circle"></i> <span>MCQ Management</span></a> 
+        <a href="recommendation.html" class="menu-item"><i class="fas fa-lightbulb"></i> <span>Recommendation Management</span></a> <a href="setting.html" class="menu-item active"><i class="fas fa-cog"></i> <span>Settings</span></a>
+    </div>
+    
+        <div class="logout-container">
+        <button id="logoutBtn" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Log Out</span>
+        </button>
+    </div>
+</div>
+<div class="main-content">
+    <div class="header">
+        <h2>Settings</h2>
+        <div class="user-info">
+            <span id="headerUsername">Dr.ProfessorUser</span>
+            <img id="headerProfileImage" src="/public/Avatars/default_avatar.png" alt="User profile" style="width: 40px; height: 40px; border-radius: 50%;">
+        </div>
+    </div>
+
+    <div class="card settings-container">
+        <h3 style="margin-bottom: 30px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 10px;">Personal Information</h3>
+        
+        <form id="settingsForm" class="form-group">
+            <div class="form-row">
+                <label for="name">name</label>
+                <input type="text" id="name" name="name" required />
+            </div>
+
+            <div class="form-row">
+                <label for="email">University Email</label>
+                <input type="email" id="email" name="email" disabled />
+            </div>
+
+            <div class="form-row">
+                <label for="department">Department / College</label>
+                <input type="text" id="department" name="department" placeholder="e.g. Computer Science"/>
+            </div>
+
+            <div class="form-row">
+                <label>Profile Picture</label>
+                <div>
+                    <div class="current-profile-picture-display">
+                        <img id="profileImageDisplay" src="/public/Avatars/default_avatar.png" alt="Current Profile Picture">
+                        <p>Your Current Avatar</p>
+                    </div>
+                    <p style="margin-top: 15px; margin-bottom: 10px; font-weight: 500;">Choose a new avatar:</p>
+                    <div id="avatarSelection" class="avatar-selection-container">
+                        </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-success">Save Changes</button>
+                <button type="button" class="btn btn-primary" onclick="openPasswordModal()">Change Password</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePasswordModal()">&times;</span>
+            <h3 style="margin-bottom: 20px;">Change Password</h3>
+            <input type="email" id="resetEmail" placeholder="Confirm your email" />
+            <button class="btn btn-primary" onclick="sendPasswordReset()" style="width: 100%;">Send Reset Link</button>
+        </div>
+    </div>
+</div>
+
+<footer>
+        <div class="footer-content">
+                </div>
+                <span>Jahizyah</span>
+            <p class="copyright">© 2025 Jahizyah Educational Platform. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAI30r2_rI6vsuoaZIvzZQkauZ0d7KlhwI",
+        authDomain: "infohive-fda92.firebaseapp.com",
+        projectId: "infohive-fda92",
+        messagingSenderId: "938794496627",
+        appId: "1:938794496627:web:467f85ce9e035a2136b006"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let currentUserUID = null;
+    // تعيين الصورة الرمزية الافتراضية بمسارها الصحيح من مجلد Avatars
+    let selectedAvatarURL = '/public/Avatars/default_avatar.png'; 
+
+    // قائمة بمسارات الصور الرمزية المتاحة داخل مجلد "public/Avatars"
+    const avatarOptions = [
+        '../../Avatars/avatar1.png', 
+        '../../Avatars/avatar2.png', 
+        '../../Avatars/default_avatar.png', 
+    ];
+
+    // دالة لإنشاء وعرض خيارات الصور الرمزية
+    function loadAvatarOptions() {
+        const avatarSelectionDiv = document.getElementById('avatarSelection');
+        avatarSelectionDiv.innerHTML = ''; // مسح أي خيارات سابقة
+
+        avatarOptions.forEach(avatarPath => {
+            const img = document.createElement('img');
+            img.src = avatarPath; 
+            img.alt = 'Avatar';
+            img.classList.add('avatar-option');
+            img.dataset.url = avatarPath; // تخزين المسار الكامل لسهولة الوصول
+            img.addEventListener('click', () => selectAvatar(img));
+            avatarSelectionDiv.appendChild(img);
+        });
+        console.log("Avatar options loaded. Current selectedAvatarURL:", selectedAvatarURL);
+    }
+
+    // دالة لتحديد الصورة الرمزية
+    function selectAvatar(selectedImgElement) {
+        // إزالة فئة 'selected' من جميع الصور الرمزية
+        document.querySelectorAll('.avatar-option').forEach(img => {
+            img.classList.remove('selected');
+        });
+
+        // إضافة فئة 'selected' للصورة المختارة
+        selectedImgElement.classList.add('selected');
+        selectedAvatarURL = selectedImgElement.dataset.url; // حفظ رابط الصورة المختارة
+        document.getElementById('profileImageDisplay').src = selectedAvatarURL; // عرض الصورة المختارة في قسم "Your Current Avatar"
+        document.getElementById('headerProfileImage').src = selectedAvatarURL; // تحديث الصورة في الهيدر
+        console.log("Avatar selected:", selectedAvatarURL);
+    }
+
+
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            currentUserUID = user.uid;
+            console.log("User logged in:", user.uid);
+            const doc = await db.collection('users').doc(user.uid).get();
+            if (doc.exists) { // التأكد من وجود الوثيقة
+                const data = doc.data();
+                console.log("User data from Firestore:", data);
+
+                document.getElementById('name').value = data.fullName || '';
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('department').value = data.department || '';
+                document.getElementById('resetEmail').value = user.email || '';
+                document.getElementById('headerUsername').textContent = data.fullName || 'Dr.ProfessorUser';
+
+                // عرض الصورة الشخصية المحفوظة (إذا كانت موجودة)
+                if (data.profileImageURL) {
+                    selectedAvatarURL = data.profileImageURL; // تحديث المتغير بهذه القيمة
+                    document.getElementById('profileImageDisplay').src = selectedAvatarURL;
+                    document.getElementById('headerProfileImage').src = selectedAvatarURL; 
+                    console.log("Profile image loaded from Firestore:", selectedAvatarURL);
+                } else {
+                    // إذا لم يكن هناك صورة محفوظة، استخدم الصورة الافتراضية
+                    selectedAvatarURL = '/public/Avatars/default_avatar.png'; // التأكد من استخدام الافتراضي
+                    document.getElementById('profileImageDisplay').src = selectedAvatarURL;
+                    document.getElementById('headerProfileImage').src = selectedAvatarURL;
+                    console.log("No profile image in Firestore, using default:", selectedAvatarURL);
+                }
+            } else {
+                    // إذا لم توجد وثيقة للمستخدم، استخدم الافتراضي
+                console.warn("User document not found in Firestore for UID:", user.uid);
+                selectedAvatarURL = '/public/Avatars/default_avatar.png';
+                document.getElementById('profileImageDisplay').src = selectedAvatarURL;
+                document.getElementById('headerProfileImage').src = selectedAvatarURL;
+            }
+        } else {
+            // في حالة عدم وجود مستخدم مسجل الدخول
+            console.log("No user logged in.");
+            selectedAvatarURL = '/public/Avatars/default_avatar.png';
+            document.getElementById('profileImageDisplay').src = selectedAvatarURL;
+            document.getElementById('headerProfileImage').src = selectedAvatarURL;
+            document.getElementById('headerUsername').textContent = 'Dr.ProfessorUser'; // إعادة الاسم الافتراضي
+        }
+        // تحميل خيارات الصور الرمزية بعد تهيئة الصفحة
+        loadAvatarOptions();
+        // هذا الجزء يجب أن يتم بعد أن يتم تحميل الخيارات لتحديد الصورة المختارة في الواجهة
+        if (selectedAvatarURL) {
+            document.querySelectorAll('.avatar-option').forEach(img => {
+                if (img.dataset.url === selectedAvatarURL) {
+                    img.classList.add('selected');
+                    console.log("Marking selected avatar in UI:", selectedAvatarURL);
+                }
+            });
+        }
+    });
+
+    document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const user = auth.currentUser;
+        if (!user) {
+            alert("❗ No user signed in");
+            return;
+        }
+
+        const fullName = document.getElementById('name').value.trim();
+        const department = document.getElementById('department').value.trim();
+        
+        const updateData = {
+            fullName: fullName,
+            department: department,
+            profileImageURL: selectedAvatarURL // حفظ رابط الصورة المختارة
+        };
+        console.log("Attempting to save updateData:", updateData);
+
+        try {
+            await db.collection('users').doc(user.uid).update(updateData);
+            alert("✅ Changes saved successfully");
+            // بعد الحفظ، تحديث الصورة في الهيدر وفي عرض الصورة الحالية
+            document.getElementById('headerProfileImage').src = selectedAvatarURL;
+            document.getElementById('profileImageDisplay').src = selectedAvatarURL;
+            console.log("Changes saved successfully. New profile image set to:", selectedAvatarURL);
+        } catch (error) {
+            console.error("Error saving changes:", error);
+            alert("❌ Error saving changes: " + error.message);
+        }
+    });
+
+    function openPasswordModal() {
+        document.getElementById('passwordModal').classList.add('show');
+    }
+
+    function closePasswordModal() {
+        document.getElementById('passwordModal').classList.remove('show');
+    }
+
+    function sendPasswordReset() {
+        const email = document.getElementById('resetEmail').value;
+        auth.sendPasswordResetEmail(email)
+            .then(() => {
+                alert("📧 Password reset link sent to your email");
+                closePasswordModal();
+            })
+            .catch((error) => {
+                alert("❌ Error: " + error.message);
+            });
+    }
+
+    // لتفعيل الـ menu-item active في السايدبار
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+    // تأثير التحميل بالعربية
+    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الخروج...';
+    this.disabled = true;
+    
+    firebase.auth().signOut()
+       .then(() => {
+            window.location.href = "../../home.html";// تم التغيير هنا
+        })
+    
+        .catch(error => {
+            this.innerHTML = '<i class="fas fa-sign-out-alt"></i> تسجيل الخروج';
+            this.disabled = false;
+            alert("خطأ في الخروج: " + error.message);
+        });
+});
+</script>
+</body>
+</html>

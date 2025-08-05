@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About - Jahizyah</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+       * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #1a73e8;
+    --primary-light: #4285f4;
+    --background: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-primary: #202124;
+    --text-secondary: #5f6368;
+    --light-gray: #dadce0;
+    --light-blue: #e3f2fd;
+    --pink-light: #fce4ec;
+    --pink-text: #e91e63;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    line-height: 1.6;
+    background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+    color: var(--text-primary);
+}
+
+body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(248, 249, 250, 0.85);
+    z-index: -1;
+}
+
+/* Navigation Bar */
+nav {
+    background-color: #1a73e8;
+    padding: 10px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: 600;
+    font-size: 25px;
+}
+
+.logo-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li {
+    margin-left: 25px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #ffffff;
+}
+
+.nav-links i {
+    margin-right: 8px;
+    font-size: 1.1rem;
+}
+
+.nav-links .active {
+    color: #ffffff;
+}
+
+/* About Content */
+.about-section {
+    padding: 80px 0;
+}
+
+.about-content {
+    background-color: white;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.content-group {
+    margin-top: 2rem;
+}
+
+.content-group h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.about-title {
+    color: var(--primary);
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 800;
+}
+
+.about-card p {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .feature-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.feature-icon {
+    background-color: rgba(26, 115, 232, 0.1);
+    color: var(--primary);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.feature-item h3 {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.feature-item p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+    line-height: 1.5;
+}
+
+.team-group {
+    margin-top: 2.5rem;
+}
+
+.team-group h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .team-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.team-card {
+    background-color: var(--card-bg);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.team-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background-color: var(--pink-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.team-icon {
+    font-size: 1.5rem;
+    color: var(--pink-text);
+}
+
+.team-members li {
+    list-style: none;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.supervisors-box {
+    margin-top: 2rem;
+    background-color: var(--light-blue);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+.supervisors-box h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+}
+
+.supervisors-box p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.supervisors-box .bold {
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        padding: 30px;
+    }
+    
+    .about-title {
+        font-size: 2rem;
+    }
+    
+    .nav-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .nav-links {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container nav-container">
+            <div class="logo">
+                <div class="logo-icon" >
+                    <img src="images/Jahizyah.png" alt="Jahizyah Logo" class="logo-image">
+                </div>
+                <span >Jahizyah</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html"><i class="fas fa-home"></i> Home </a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                  
+            </ul>
+        </div>
+    </nav>
+
+    <div class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <h1 class="about-title">About Jahizyah</h1>
+                <div class="about-card">
+            <p>Jahizyah is a student-centered educational platform designed to help Information Technology students prepare for readiness exams. Our mission is to guide learners through interactive assessments, performance analysis, and personalized recommendations to improve their skills and boost their confidence.</p>
+            <p>We understand the challenges students face in finding reliable and structured resources to prepare for their careers. That's why Jahizyah was created to bring everything they need into one organized, interactive, and user-friendly platform.</p>
+            <div class="content-group">
+                <h2>What We Offer</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
+                        <div><h3>Evaluate Knowledge</h3><p>Comprehensive assessments to measure understanding</p></div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-lightbulb"></i></div>
+                        <div><h3>Identify Strengths</h3><p>Detailed analysis of performance areas</p></div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-book"></i></div>
+                        <div><h3>Subject Resources</h3><p>Curated materials for focused learning</p></div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <div><h3>Track Progress</h3><p>Visualize improvement over time</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-group">
+                <h2>Our Vision</h2>
+                <p>To empower IT students with the tools and knowledge they need to succeed in their academic and professional journeys.</p>
+            </div>
+            <div class="team-group">
+                <h2>Our Team</h2>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-icon-wrapper"><i class="fas fa-user-graduate team-icon"></i></div>
+                        <ul class="team-members">
+                            <li>Madihah ALATWI</li>
+                            <li>Shahad ALAMRI</li>
+                            <li>Aljawhara ALATWI</li>
+                        </ul>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-icon-wrapper"><i class="fas fa-user-graduate team-icon"></i></div>
+                        <ul class="team-members">
+                            <li>Shatha ALMUTAIRI</li>
+                            <li>Waad ALARWI</li>
+                            <li>Sana ALATWI</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="supervisors-box">
+                <h2>Supervisors</h2>
+                <p class="bold-text"><span class="bold">Dr. Salwa ALJEHANI</span> & <span class="bold">Dr. Refka HARRABI</span></p>
+                <p><span class="bold">University:</span> University of Tabuk – IT Department</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Progress Dashboard | Jahizyah</title>
+  <link rel="stylesheet" href="css/style22.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            },
+            secondary: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            success: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            },
+            warning: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+            },
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --primary: #1a73e8;
+      --secondary: #fbbc04;
+      --accent: #34a853;
+      --background: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-primary: #202124;
+      --text-secondary: #5f6368;
+      --light-gray: #dadce0;
+      --success: #34a853;
+      --warning: #ea8600;
+      --purple: #9b59b6;
+      --light-blue: #5dade2;
+    }
+    
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--background);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .nav-logo {
+      transition: all 0.3s;
+    }
+    
+    .nav-logo:hover {
+      transform: rotate(5deg);
+    }
+    
+    .nav-links a {
+      position: relative;
+      transition: all 0.3s;
+    }
+    
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: white;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+    
+    .progress-bar {
+      height: 10px;
+      border-radius: 5px;
+      background-color: #e0e0e0;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.6s ease;
+    }
+    
+    .card {
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    .badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    
+    .score-high {
+      background-color: rgba(52, 168, 83, 0.15);
+      color: #34a853;
+    }
+    
+    .score-medium {
+      background-color: rgba(251, 188, 4, 0.15);
+      color: #fbbc04;
+    }
+    
+    .score-low {
+      background-color: rgba(234, 67, 53, 0.15);
+      color: #ea4335;
+    }
+    
+    .subject-tag {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    
+    .os-tag {
+      background-color: rgba(26, 115, 232, 0.15);
+      color: var(--primary);
+    }
+    
+    .networking-tag {
+      background-color: rgba(155, 89, 182, 0.15);
+      color: var(--purple);
+    }
+    
+    .security-tag {
+      background-color: rgba(52, 168, 83, 0.15);
+      color: var(--accent);
+    }
+    
+    .chart-bar {
+      transition: height 0.8s ease;
+    }
+    
+    .chart-bar:hover {
+      filter: brightness(1.1);
+    }
+    
+    footer {
+      margin-top: auto;
+    }
+    
+    @media (max-width: 768px) {
+      .chart-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .chart-bar {
+        width: 30px;
+        margin: 0 5px;
+      }
+    }
+
+    .avatar-ring {
+  box-shadow: 0 0 0 3px #0ea5e9, 0 0 0 6px rgba(14, 165, 233, 0.2);
+}
+.animate-bounce-slow {
+  animation: bounce-slow 2s infinite;
+}
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+  </style>
+  
+</head>
+<body class="bg-background text-textPrimary">
+  <nav>
+    <div class="container nav-container">
+      <div class="logo">
+        <div class="logo-icon">
+          <img src="../../images/Jahizyah.png" alt="Jahizyah Logo" class="logo-image">
+        </div>
+        <span>Jahizyah</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="Main-stu.html"><i class="fas fa-home"></i> Home </a></li>
+        <li><a href="about-s.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+        <li><a href="progress.html"><i class="fas fa-chart-line"></i> Progress</a></li>
+        <li><a href="contact-s.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
+        <li><a href="setting-stu.html"><i class="fas fa-cog"></i>setting </a></li>
+      </ul>
+    
+  </div>
+    </nav>
+    
+    </nav>
+  </nav>
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <h1 class="text-2xl font-bold text-primary-800">Student Progress Dashboard</h1>
+      <p class="text-secondary-500">Detailed analysis of your academic performance and test history</p>
+    </div>
+
+ 
+ 
+
+<div class="flex flex-col lg:flex-row gap-8">
+  <!-- Profile Section -->
+  <div class="w-full lg:w-1/3">
+    <!-- Student Profile Card -->
+<div class="bg-white rounded-xl shadow-md overflow-hidden card-hover transition duration-300 p-6 mb-6">
+  <div class="flex flex-col items-center mb-6">
+            <div class="w-20 h-20 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mb-2 avatar-ring animate-bounce-slow">
+      <i class="fas fa-user-graduate text-3xl"></i>
+      
+    </div>
+    <h3 class="text-xl font-bold text-secondary-800 text-center" id="username-profile">Student</h3>
+    <p class="text-green-600 text-sm mt-1" id="user-email">your@email.com</p>
+  </div>
+</div>
+
+
+      <div class="mt-6">
+        <h3 class="font-bold text-lg mb-3">Performance Summary</h3>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between mb-1">
+  <span class="text-textSecondary">Cumulative Average</span>
+  <span class="font-bold" id="cumulative-average">0%</span>
+</div>
+<div class="progress-bar">
+  <div class="progress-fill bg-gradient-to-r from-green-400 to-green-600" id="cumulative-bar" style="width: 0%"></div>
+</div>
+<div>
+  <div class="flex justify-between mb-1">
+    <span class="text-textSecondary">Tests Taken</span>
+    <span class="font-bold" id="tests-taken">0</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill bg-gradient-to-r from-blue-400 to-blue-600" id="tests-bar" style="width: 0%"></div>
+  </div>
+</div>
+<div>
+  <div class="flex justify-between mb-1">
+    <span class="text-textSecondary">Improvement Rate</span>
+    <span class="font-bold" id="improvement-rate">0%</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill bg-gradient-to-r from-orange-400 to-orange-600" id="improvement-bar" style="width: 0%"></div>
+  </div>
+</div>
+          </div>
+        </div>
+      </div>
+  </div>
+          
+  <!-- Test History Section -->
+  <div class="w-full lg:w-2/3  max-h-[600px] overflow-y-auto scroll-table">
+    
+    <div class="card bg-white p-6 mb-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">Test History</h2>
+       
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="text-left text-textSecondary border-b">
+              <th class="pb-3">Date</th>
+              <th class="pb-3">Subject</th>
+              <th class="pb-3">Score</th>
+            </tr>
+          </thead>
+          <tbody id="test-history-table">
+  <tr>
+    <td colspan="5" class="px-6 py-4 text-center text-sm text-secondary-500">
+      Loading test history...
+    </td>
+  </tr>
+</tbody>
+        </table>
+      </div>
+
+      
+    </div>
+    
+  </div>
+  
+</div>
+<a href="progress.html" class="bg-primary text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-600 transition mt-4 inline-block">
+        Back to Progress
+      </a>
+  </div>
+
+
+
+
+      
+
+  
+<footer>
+        <div class="footer-content">
+                </div>
+                <span>Jahizyah</span>
+            <div class="footer-links">
+                <a href="Main-stu.html">Home</a>
+                <a href="about-s.html">About Us</a>
+                <a href="contact-s.html">Contact</a>
+            </div>
+            
+            <p class="copyright">© 2025 Jahizyah Educational Platform. All Rights Reserved.<br>
+            Assess Your Level And Get Personalized Recommendations | Choose The Subject You Want To Test Your Knowledge In</p>
+        </div>
+    </footer>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  
+  <script>
+  // Initialize Firebase (use your config!)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAI30r2_rI6vsuoaZIvzZQkauZ0d7KlhwI",
+    authDomain: "infohive-fda92.firebaseapp.com",
+    projectId: "infohive-fda92",
+    storageBucket: "infohive-fda92.appspot.com",
+    messagingSenderId: "938794496627",
+    appId: "1:938794496627:web:467f85ce9e035a2136b006"
+  };
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  auth.onAuthStateChanged(async (user) => {
+    if (!user) {
+      window.location.href = "../../login.html";
+      return;
+    }
+    const uid = user.uid;
+    try {
+      const userDoc = await db.collection("users").doc(uid).get();
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+
+        // الاسم
+        const usernameElem = document.getElementById("username-profile");
+        if (usernameElem) usernameElem.textContent = userData.name || "Student";
+
+        // البريد
+        const emailElem = document.getElementById("user-email");
+        if (emailElem) emailElem.textContent = userData.email || user.email || "Email not found";
+      }
+    } catch (error) {
+      console.error("Error fetching profile info:", error);
+    }
+
+
+    try {
+  const resultsSnap = await db.collection("examResults")
+    .where("studentId", "==", uid)
+    .orderBy("timestamp", "desc")
+    .get();
+
+  let scores = [];
+  let times = [];
+  resultsSnap.forEach(doc => {
+    const r = doc.data();
+    const score = typeof r.Score === "number" ? r.Score
+      : (r.testResults && typeof r.testResults.Score === "number" ? r.testResults.Score
+      : r.score || 0);
+    scores.push(score);
+
+    let timeSpent = r.timeSpent || (r.testResults && r.testResults.timeSpent) || "";
+    let mins = 0;
+    if (typeof timeSpent === "string" && timeSpent.includes("min")) {
+      mins = parseInt(timeSpent);
+    } else if (typeof timeSpent === "number") {
+      mins = timeSpent;
+    }
+    times.push(mins);
+  });
+
+  // 1. المعدل التراكمي
+  const cumulative = scores.length > 0 ? Math.round(scores.reduce((a,b)=>a+b,0) / scores.length) : 0;
+  // 2. عدد الاختبارات
+  const testsTaken = scores.length;
+  // 3. نسبة التحسن (آخر اختبار - أول اختبار)
+  let improvementRate = 0;
+  if (scores.length >= 2) {
+    const first = Math.round(scores[scores.length-1]);
+    const last = Math.round(scores[0]);
+    improvementRate = last - first;
+  }
+  
+  // تحديث الصفحة
+  // المعدل التراكمي
+  const cumulativeElem = document.getElementById('cumulative-average');
+  if (cumulativeElem) cumulativeElem.textContent = cumulative + "%";
+  const cumulativeBar = document.getElementById('cumulative-bar');
+  if (cumulativeBar) cumulativeBar.style.width = cumulative + "%";
+
+  // عدد الاختبارات
+  const testsElem = document.getElementById('tests-taken');
+  if (testsElem) testsElem.textContent = testsTaken;
+  const testsBar = document.getElementById('tests-bar');
+  if (testsBar) {
+    let testsPercent = testsTaken >= 10 ? 100 : Math.round((testsTaken/10)*100);
+    testsBar.style.width = testsPercent + "%";
+  }
+
+  // نسبة التحسن
+  const improvementElem = document.getElementById('improvement-rate');
+  if (improvementElem) improvementElem.textContent = (improvementRate >= 0 ? "+" : "") + improvementRate + "%";
+  const improvementBar = document.getElementById('improvement-bar');
+  if (improvementBar) {
+    let impPercent = improvementRate > 100 ? 100 : (improvementRate < 0 ? 0 : improvementRate);
+    improvementBar.style.width = impPercent + "%";
+  }
+
+} catch (error) {
+  console.error("Error calculating bars:", error);
+}
+    // Fetch test history from Firestore
+    try {
+      const resultsSnap = await db.collection("examResults")
+        .where("studentId", "==", uid)
+        .orderBy("timestamp", "desc")
+        .limit() 
+        .get();
+
+      let html = "";
+      if (resultsSnap.empty) {
+        html = `
+          <tr>
+            <td colspan="5" class="px-6 py-4 text-center text-sm text-secondary-500">
+              No test history available. Take your first test!
+            </td>
+          </tr>
+        `;
+      } else {
+        resultsSnap.forEach(doc => {
+          const r = doc.data();
+          const date = r.timestamp 
+            ? new Date(r.timestamp.seconds * 1000).toLocaleDateString()
+            : r.date || "N/A";
+          const subject = r.subject || (r.testResults && r.testResults.subject) || "N/A";
+          const score = typeof r.Score === "number" ? r.Score : 
+            (r.testResults && typeof r.testResults.Score === "number" ? r.testResults.Score : r.score || 0);
+          const timeSpent = r.timeSpent || (r.testResults && r.testResults.timeSpent) || "N/A";
+          const scoreColor = score >= 70 ? "score-high" : score >= 50 ? "score-medium" : "score-low";
+
+          html += `
+            <tr class="border-b hover:bg-gray-50">
+              <td class="py-4">${date}</td>
+              <td class="py-4">
+                <span class="subject-tag">${subject}</span>
+              </td>
+              <td class="py-4">
+                <span class="badge ${scoreColor}">${score}%</span>
+              </td>
+              <td class="py-4">
+               
+               
+              </td>
+            </tr>
+          `;
+        });
+      }
+      // Update the table
+      document.getElementById("test-history-table").innerHTML = html;
+    } catch (error) {
+      console.error("Error fetching test history:", error);
+      document.getElementById("test-history-table").innerHTML = `
+        <tr>
+          <td colspan="5" class="px-6 py-4 text-center text-sm text-red-500">
+            Failed to load test history.
+          </td>
+        </tr>
+      `;
+    }
+  });
+
+  auth.onAuthStateChanged(async (user) => {
+  if (!user) {
+    window.location.href = "../../login.html";
+    return;
+  }
+
+  const uid = user.uid;
+
+  try {
+    const userDoc = await db.collection("users").doc(uid).get();
+    if (userDoc.exists) {
+      const userData = userDoc.data();
+      
+      // ✅ تحديث الاسم في أي عنصر بالصفحة
+      if (document.getElementById("username-profile"))
+        document.getElementById("username-profile").textContent = userData.name || "Student";
+
+      if (document.getElementById("username-header"))
+        document.getElementById("username-header").textContent = userData.name || "Student";
+    }
+  } catch (error) {
+    console.error("Error loading name:", error);
+  }
+});
+
+</script>
+</body>
+</html>

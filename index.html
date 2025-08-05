@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jahizyah - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #4285f4;
+           --secondary: #fbbc04; 
+         --accent: #34a853; 
+            --background: #f8f9fa;
+            --card-bg: #ffffff; 
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --light-gray: #dadce0;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            line-height: 1.6;
+            background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(248, 249, 250, 0.85);
+            z-index: -1;
+        }
+
+         /* Navigation bar */
+ nav {
+            background-color: #1a73e8;/* #2c3e50;*/
+            padding: 10px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+ .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2px;
+        }
+
+  .logo {
+            display:flex;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            font-size: 25px;/*1.2rem;*/
+       
+        }
+
+.logo-icon {
+            margin-right: 10px;
+        }
+        
+        .logo-image {
+            width: 40px;
+            height: 40px;
+           
+         /*   border-radius: 50%;*/
+            object-fit: cover;
+        }
+       /*
+.logo:hover .logo-icon {
+    background: rgba(255, 255, 255, 0.25);
+  /*  transform: rotate(15deg);
+}
+*/
+
+ .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .nav-links .active {
+            color: #ffffff;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 40px; 
+            color: var(--text-primary);
+        }
+
+        .btn-get-started {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-get-started:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(26, 115, 232, 0.4);
+            background: #0d5bba;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                height: auto;
+                padding: 120px 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .btn-get-started { 
+                padding: 14px 35px;
+            }
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body> 
+ <nav>
+        <div class="container nav-container">
+            <div class="logo">
+                <div class="logo-icon" >
+                    <img src="images/Jahizyah.png" alt="Jahizyah Logo" class="logo-image">
+                </div>
+                <span >Jahizyah</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html"><i class="fas fa-home"></i> Home </a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                  
+            </ul>
+        </div>
+    </nav>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to the Jahizyah website</h1>
+            <p>Your gateway to interactive learning and knowledge sharing</p>
+            
+            <a href="login.html" class="btn-get-started">Get Started</a>
+        </div>
+    </section> 
+</body>
+</html>

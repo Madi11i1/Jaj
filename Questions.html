@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jahizyah - Interactive Exam</title>
+    <link rel="stylesheet" href="css/ques-style.css">
+    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>      
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 70px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    padding: 30px 20px 20px;
+}
+
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 0;
+    border-top: 1px solid var(--light-gray);
+}
+
+.footer-logo {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+</style>
+</head>
+<body>
+     <nav>
+        <div class="container nav-container">
+            <div class="logo">
+                <div class="logo-icon" >
+                    <img src="../../images/Jahizyah.png" alt="Jahizyah Logo" class="logo-image">
+                </div>
+                <span>Jahizyah</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="Main-stu.html"><i class="fas fa-home"></i> Home </a></li>
+                <li><a href="about-s.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="progress.html"><i class="fas fa-chart-line"></i> Progress</a></li>
+                <li><a href="contact-s.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                <li><a href="setting-stu.html"><i class="fas fa-cog"></i>setting </a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="exam-header">
+            <div class="exam-info">
+                <h1 id="exam-title">Exam Title</h1>
+                <p id="exam-meta"></p>
+            </div>
+            <div class="timer-container">
+                <div class="timer-label">TIME REMAINING</div>
+                <div class="timer" id="timer">00:00</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="exam-container">
+            <div class="question-header">
+                <div class="question-number" id="current-question"></div>
+                <button class="flag-btn" id="flagBtn">
+                    <i class="fas fa-flag"></i> Flag for Review
+                </button>
+            </div>
+            
+            <div class="question-content">
+                <div class="question-text" id="question-text">
+                    Question content will be loaded here from the database...
+                </div>
+            </div>
+            
+            <div class="options-container" id="options-container">
+                <div class="option">
+                    <div class="option-letter">A</div>
+                    <div class="option-text">Option A content</div>
+                </div>
+                <div class="option selected">
+                    <div class="option-letter">B</div>
+                    <div class="option-text">Option B content</div>
+                </div>
+                <div class="option">
+                    <div class="option-letter">C</div>
+                    <div class="option-text">Option C content</div>
+                </div>
+                <div class="option">
+                    <div class="option-letter">D</div>
+                    <div class="option-text">Option D content</div>
+                </div>
+            </div>
+            
+            <div class="navigation-controls">
+                <button class="nav-btn prev" id="prevBtn">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button class="nav-btn next" id="nextBtn">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="progress-container">
+            <h2 class="progress-title">Exam Progress</h2>
+            <div class="questions-grid" id="questions-grid">
+                <div class="question-indicator">1</div>
+                <div class="question-indicator answered">2</div>
+                <div class="question-indicator answered">3</div>
+                <div class="question-indicator">4</div>
+                <div class="question-indicator">5</div>
+                <div class="question-indicator answered">6</div>
+                <div class="question-indicator current">7</div>
+                <div class="question-indicator flagged">8</div>
+                <div class="question-indicator">9</div>
+                <div class="question-indicator">10</div>
+                <div class="question-indicator">11</div>
+                <div class="question-indicator">12</div>
+                <div class="question-indicator">13</div>
+                <div class="question-indicator">14</div>
+                <div class="question-indicator">15</div>
+                <div class="question-indicator">16</div>
+                <div class="question-indicator">17</div>
+                <div class="question-indicator">18</div>
+                <div class="question-indicator">19</div>
+                <div class="question-indicator">20</div>
+                <div class="question-indicator">21</div>
+                <div class="question-indicator">22</div>
+                <div class="question-indicator">23</div>
+                <div class="question-indicator">24</div>
+                <div class="question-indicator">25</div>
+                <div class="question-indicator">26</div>
+                <div class="question-indicator">27</div>
+                <div class="question-indicator">28</div>
+                <div class="question-indicator">29</div>
+                <div class="question-indicator">30</div>
+            </div>
+            
+            <div class="status-legend">
+                <div class="status-item">
+                    <div class="status-color current-status"></div>
+                    <span>Current Question</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-color answered-status"></div>
+                    <span>Answered</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-color flagged-status"></div>
+                    <span>Flagged</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-color unanswered-status"></div>
+                    <span>Unanswered</span>
+                </div>
+            </div>
+            
+            <div class="navigation-controls" style="margin-top: 30px;">
+                <button class="nav-btn submit" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Submit Exam
+                </button>
+            </div>
+        </div>
+    </div>
+
+    
+<footer>
+        <div class="footer-content">
+                </div>
+                <span>Jahizyah</span>
+            <div class="footer-links">
+                <a href="Main-stu.html">Home</a>
+                <a href="about-s.html">About Us</a>
+                <a href="contact-s.html">Contact</a>
+            </div>
+            
+            <p class="copyright">© 2025 Jahizyah Educational Platform. All Rights Reserved.<br>
+</p>
+        </div>
+    </footer>
+
+
+
+    <script type="module" src="js/ques-script.js"></script>
+</body>
+</html>

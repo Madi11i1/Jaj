@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Jahizyah</title>
+    <meta name="description" content="Admin sign in to InfoHive to access the administration panel.">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <style>
+        :root {
+            --primary-color: #2563EB;
+            --primary-light: #3B82F6;
+            --primary-dark: #1D4ED8;
+            --text-dark: #1E3A8A;
+            --text-light: #FFFFFF;
+            --bg-light: #FFFFFF;
+            --bg-lighter: #F8FAFC;
+            --border-color: rgba(59, 130, 246, 0.3);
+            --error-color: #EF4444;
+            --success-color: #10B981;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-lighter);
+            color: var(--text-dark);
+        }
+        
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            background-color: var(--bg-light);
+            background-image: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+        }
+        
+        .login-card {
+            background: var(--bg-light);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.1);
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.15);
+        }
+        
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.2);
+        }
+        
+        .login-logo img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+        
+        .login-title {
+            color: var(--primary-dark);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .login-subtitle {
+            color: var(--text-dark);
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--bg-lighter);
+            color: var(--text-dark);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            background: var(--bg-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .form-input::placeholder {
+            color: rgba(30, 58, 138, 0.4);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+            background: linear-gradient(45deg, var(--primary-dark), var(--primary-color));
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .back-home {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            z-index: 10;
+        }
+        
+        .back-home:hover {
+            color: var(--primary-dark);
+        }
+        
+        .back-home svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .back-home {
+                top: 1rem;
+                left: 1rem;
+            }
+            
+            .login-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <img src="images/images/Jahizyah.png" alt="Jahizyah Logo">
+                </div>
+                <h1 class="login-title">Admin Portal</h1>
+                <p class="login-subtitle">Sign in to access the administration panel</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" placeholder="password" required>
+                    <div id="error-message" class="error-message"></div>
+                </div>
+                
+                <button type="submit" class="login-btn" id="submit-btn">
+                    <span id="btn-text">Sign In</span>
+                    <span id="btn-loading" class="loading" style="display: none;"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Firebase configuration - replace with your project's config
+            const firebaseConfig = {
+                apiKey: "AIzaSyDEXAMPLEEXAMPLEEXAMPLEEXAMPLE", // استبدل بمفتاح API الخاص بك
+                authDomain: "infohive-fda92.firebaseapp.com",
+                databaseURL: "https://infohive-fda92-default-rtdb.firebaseio.com",
+                projectId: "infohive-fda92",
+                storageBucket: "infohive-fda92.appspot.com",
+                messagingSenderId: "123456789012",
+                appId: "1:123456789012:web:abcdef1234567890"
+            };
+
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+            const auth = firebase.auth();
+
+            // Hardcoded admin credentials (fallback)
+            const hardcodedAdmin = {
+                email: "snah74450@gmail.com",
+                password: "admin@334455"
+            };
+
+            const form = document.getElementById('login-form');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const errorMessage = document.getElementById('error-message');
+            const submitBtn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnLoading = document.getElementById('btn-loading');
+
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                
+                // Show loading state
+                btnText.style.display = 'none';
+                btnLoading.style.display = 'inline-block';
+                submitBtn.disabled = true;
+                errorMessage.style.display = 'none';
+                
+                try {
+                    // First try Firebase authentication
+                    try {
+                        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                        // If successful, redirect to dashboard
+                        window.location.href = 'admin-dashboard.html';
+                        return;
+                    } catch (firebaseError) {
+                        console.log("Firebase auth failed, trying database check...");
+                    }
+                    
+                    // If Firebase auth fails, try database check
+                    try {
+                        const snapshot = await database.ref('admins').once('value');
+                        const admins = snapshot.val();
+                        
+                        // Check if credentials match any admin in database
+                        let adminFound = false;
+                        if (admins) {
+                            for (const key in admins) {
+                                const admin = admins[key];
+                                if (admin && admin.email === email && admin.password === password) {
+                                    adminFound = true;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // If not found in database, check hardcoded credentials
+                        if (!adminFound) {
+                            if (email === hardcodedAdmin.email && password === hardcodedAdmin.password) {
+                                adminFound = true;
+                            }
+                        }
+                        
+                        if (adminFound) {
+                            // Redirect to admin dashboard
+                            window.location.href = 'admin-dashboard.html';
+                        } else {
+                            throw new Error('Invalid email or password');
+                        }
+                    } catch (dbError) {
+                        console.log("Database check failed, trying hardcoded credentials...");
+                        // If database check fails, try hardcoded credentials
+                        if (email === hardcodedAdmin.email && password === hardcodedAdmin.password) {
+                            window.location.href = 'admin-dashboard.html';
+                        } else {
+                            throw new Error('Invalid email or password');
+                        }
+                    }
+                } catch (error) {
+                    console.error("Login error:", error);
+                    errorMessage.textContent = error.message;
+                    errorMessage.style.display = 'block';
+                } finally {
+                    // Hide loading state
+                    btnText.style.display = 'inline';
+                    btnLoading.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+            });
+            
+            // Clear error when typing
+            emailInput.addEventListener('input', clearError);
+            passwordInput.addEventListener('input', clearError);
+            
+            function clearError() {
+                errorMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

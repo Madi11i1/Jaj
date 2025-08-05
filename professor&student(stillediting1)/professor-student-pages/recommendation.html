@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Professor Recommendation Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="css/MCQs-Mang.css" />
+     
+
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<style>      
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 70px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    padding: 30px 20px 20px;
+}
+
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 0;
+    border-top: 1px solid var(--light-gray);
+}
+
+.footer-logo {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+</style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo">
+            <h2>Professor Portal</h2>
+        </div>
+        <div class="menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="subjectmang.html" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Subject Management</span>
+            </a>
+            <a href="MCQ-Mang.html" class="menu-item">
+                <i class="fas fa-question-circle"></i>
+                <span>MCQ Management</span>
+            </a>
+            <a href="#" class="menu-item active">
+                <i class="fas fa-lightbulb"></i>
+                <span>Recommendation Management</span>
+            </a>
+            <a href="setting.html" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+        
+        <div class="logout-container">
+        <button id="logoutBtn" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Log Out</span>
+        </button>
+    </div>
+    </div>
+
+  <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h2>Recommendation Management System</h2>
+            <div class="user-info">
+                <span> </span>
+                <span id="headerUsername">Dr.ProfessorUser</span> <img id="headerProfileImage" src="/public/Avatars/default_avatar.png" alt="User profile" style="width: 40px; height: 40px; border-radius: 50%;">
+            </div>
+        </div>
+
+        <!-- Subject Tabs -->
+        <div class="tabs" id="subjectTabs">
+            <!-- سيتم تعبئتها ديناميكيًا -->
+        </div>
+
+        <!-- Recommendation Management -->
+        <section class="recommendation-management">
+            <div class="card">
+                <div class="card-header">
+                    <h3 id="currentSubjectTitle">Programming Recommendations</h3>
+                    <button class="btn btn-primary" id="addRecommendationBtn">
+                        <i class="fas fa-plus"></i> Add Recommendation
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- سيتم تعبئة الجداول ديناميكيًا -->
+                    <div id="recommendationTablesContainer"></div>
+                </div>
+            </div>
+        </section>
+
+<!-- Add Recommendation Modal -->
+<div id="addRecommendationModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Add New Recommendation</h3>
+        <form id="recommendationForm">
+            <div class="form-group">
+                <label for="recommendationSubject">Subject:</label>
+                <select id="recommendationSubject" required>
+                    <!-- سيتم تعبئتها ديناميكيًا -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="recommendationTitle">Title::</label>
+                <input type="text" id="recommendationTitle" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="recommendationType">Resource Type:</label>
+                <select id="recommendationType" required>
+                    <option value="video">Video</option>
+                    <option value="article">Artical</option>
+                    <option value="exercise">Exercise</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="recommendationTags">Tags:</label>
+                <input type="text" id="recommendationTags" placeholder="eg: (Network,Protocol)" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="recommendationContent">Content:</label>
+                <textarea id="recommendationContent" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="recommendationResources">Resource Link</label>
+                <input type="url" id="recommendationResources" placeholder="eg: https://www.youtube.com/watch؟v=..." required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Save Recommendation</button>
+        </form>
+    </div>
+</div>
+<footer>
+        <div class="footer-content">
+                </div>
+                <span>Jahizyah</span>
+            <p class="copyright">© 2025 Jahizyah Educational Platform. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/recommendation.js" type="module"></script>
+    <script>
+        // Firebase Initialization and User Info Loading (نفس الكود من settings.html و subjectmang.html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAI30r2_rI6vsuoaZIvzZQkauZ0d7KlhwI",
+            authDomain: "infohive-fda92.firebaseapp.com",
+            projectId: "infohive-fda92",
+            messagingSenderId: "938794496627",
+            appId: "1:938794496627:web:467f85ce9e035a2136b006"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // متغير لتخزين مسار الصورة الرمزية للمستخدم (افتراضيًا أو المحفوظ في Firebase)
+        // يجب أن تكون هذه القيمة متطابقة مع ما تم حفظه في Firebase
+        let selectedAvatarURL = '/public/Avatars/default_avatar.png'; 
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const doc = await db.collection('users').doc(user.uid).get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    // تحديث اسم المستخدم في الهيدر
+                    document.getElementById('headerUsername').textContent = data.fullName || 'Dr. Professor Name';
+                    
+                    // تحديث صورة الملف الشخصي في الهيدر
+                    if (data.profileImageURL) {
+                        document.getElementById('headerProfileImage').src = data.profileImageURL;
+                        // لا حاجة لتحديث selectedAvatarURL هنا ما لم نكن سنستخدمه لاحقًا في هذه الصفحة
+                        // selectedAvatarURL = data.profileImageURL; 
+                    } else {
+                        // إذا لم تكن هناك صورة محفوظة، استخدم الصورة الافتراضية
+                        document.getElementById('headerProfileImage').src = '/public/Avatars/default_avatar.png';
+                    }
+                } else {
+                    // إذا لم توجد وثيقة للمستخدم، استخدم الافتراضي
+                    document.getElementById('headerUsername').textContent = 'Dr. Professor Name';
+                    document.getElementById('headerProfileImage').src = '/public/Avatars/default_avatar.png';
+                }
+            } else {
+                // في حالة عدم وجود مستخدم مسجل الدخول، عرض القيم الافتراضية
+                document.getElementById('headerUsername').textContent = 'Dr. Professor Name';
+                document.getElementById('headerProfileImage').src = '/public/Avatars/default_avatar.png';
+            }
+        });
+
+        // هذا الجزء من الكود لـ menu-item active يمكن نقله إلى ملف JavaScript مشترك إذا تكرر في كل صفحة
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+    // تأثير التحميل بالعربية
+    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الخروج...';
+    this.disabled = true;
+    
+    firebase.auth().signOut()
+       .then(() => {
+            window.location.href = "../../home.html";// تم التغيير هنا
+        })
+    
+        .catch(error => {
+            this.innerHTML = '<i class="fas fa-sign-out-alt"></i> تسجيل الخروج';
+            this.disabled = false;
+            alert("خطأ في الخروج: " + error.message);
+        });
+});
+    </script>
+</body>
+</html>
